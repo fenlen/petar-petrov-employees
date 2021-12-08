@@ -55,7 +55,7 @@ const toDict = (file) => { //transform the string that is a text file to a worka
     let tempObject = {
       empId: splitElement[0],
       started: new Date(splitElement[2].trim()),
-      //the double new Date() is to get the current date at midnight, to (hopefully) avoid timezone issues
+      //the double new Date() is to get the current date at midnight
       ended: splitElement[3].trim() === 'NULL' ? new Date(new Date().setHours(0,0,0,0)) : new Date(splitElement[3].trim()) //if NULL take current date
     }
 

@@ -6,7 +6,7 @@ const employeePairWithMap = textFile => {
   projects.forEach((value, key) => {
     let employeesInProject = Array.from(value).sort()
 
-    for (let i = employeesInProject.length - 1; i >= 1; i--) {
+    for (let i = employeesInProject.length - 1; i >= 1; i--) { //loop backwards since we're reducing the array each iteration
       let currentEmployee = employeesInProject.pop();
       employeesInProject.map(employee => {
         let haveWorked = workedTogetherwithMap(currentEmployee, employee);
@@ -14,20 +14,19 @@ const employeePairWithMap = textFile => {
           let employeeKey = employee[0]
           let currentEmployeeKey = currentEmployee[0]
           let placeholder = `${employeeKey}-${currentEmployeeKey}` // for readability
-          pairs.has(placeholder) ? pairs.set(placeholder, pairs.get(placeholder) + haveWorked) : pairs.set(placeholder, haveWorked)
+          pairs.has(placeholder) ? pairs.set(placeholder, pairs.get(placeholder) + haveWorked) : pairs.set(placeholder, haveWorked) //if pair exists, increment days worked together, otherwise set the value
         }
-        return 0
+        return 0 //map needs a return value
       })
     };
   });
-  console.log(pairs)
 
   let currentPair = {
     project: [0],
     pair: [],
     days: 0
   };
-  
+
   Array.from(pairs, pair => {
     console.log(pair)
     if (pair[1] > currentPair.days) {
@@ -37,7 +36,7 @@ const employeePairWithMap = textFile => {
         days: pair[1]
       }
     }
-    return 0
+    return 0 //map needs a return value
   })
   return currentPair;
 };
@@ -70,8 +69,7 @@ const convertDate = dateString => {
   return [yy, mm, dd] //January is 0
 };
 
-const workedTogetherwithMap = (emp1, emp2) => { //calculate how many days two employees have worked together
-  // console.log(emp1, emp2)
+const workedTogetherwithMap = (emp1, emp2) => { 
   emp1 = emp1[1]
   emp2 = emp2[1]
   if (emp1.get('started') <= emp2.get('ended') && emp1.get('ended') >= emp2.get('started')) { //check for overlap
