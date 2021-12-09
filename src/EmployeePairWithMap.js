@@ -13,32 +13,38 @@ const employeePairWithMap = textFile => {
         if (haveWorked) {
           let employeeKey = employee[0]
           let currentEmployeeKey = currentEmployee[0]
-          let placeholder = `${employeeKey}-${currentEmployeeKey}` // for readability
-          pairs.has(placeholder) ? pairs.set(placeholder, pairs.get(placeholder) + haveWorked) : pairs.set(placeholder, haveWorked) //if pair exists, increment days worked together, otherwise set the value
+          let pair = `${employeeKey}-${currentEmployeeKey}` // for readability
+          if (pairs.has(pair)) {
+            let projectDays = pairs.get(pair)[1]
+            projectDays.push([key, haveWorked])
+            pairs.set(pair, [(parseInt(pairs.get(pair)[0]) + haveWorked), projectDays]) 
+          } else {
+            pairs.set(pair, [haveWorked, [[key, haveWorked]]]) //if pair exists, increment days worked together, otherwise set the value
+          }
         }
         return 0 //map needs a return value
       })
     };
   });
 
-  let currentPair = {
-    project: [0],
-    pair: [],
-    days: 0
-  };
+  let currentPair;
 
   Array.from(pairs, pair => {
-    console.log(pair)
-    if (pair[1] > currentPair.days) {
-      currentPair = {
-        project: [0],
-        pair: pair[0].split('-'),
-        days: pair[1]
-      }
+    if (!currentPair) { //only on initial iteration
+      currentPair = pair
+    } else if (pair[1][0] > currentPair[1][0]) { //compare total days worked
+      currentPair = pair;
     }
     return 0 //map needs a return value
   })
-  return currentPair;
+
+
+  let formattedPair = {
+    projects: currentPair[1][1].reduce((pv, cv) => [...pv, cv], []),
+    pair: currentPair[0].split('-'),
+    totalDays: currentPair[1][0]
+  };
+  return formattedPair;
 };
 
 const toMap = file => {
@@ -59,7 +65,6 @@ const toMap = file => {
     project.set(splitLine[0], employee);
     projects.set(key, project)
   });
-
   return projects
 };
 
